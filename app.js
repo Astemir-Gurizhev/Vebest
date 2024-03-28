@@ -1,6 +1,6 @@
 const productCards = document.querySelectorAll('.product-card');
-const modalWindow = document.querySelector('.modal__window');
 const modal = document.querySelector('.modal');
+const modalWindow = document.querySelector('.modal__window');
 const modalCloser = document.querySelector('.modal__closer');
 
 productCards.forEach(el => {
@@ -31,21 +31,19 @@ productCards.forEach(el => {
             xhr.open('GET', window.location.href, true);
             
             xhr.onload = () => {
+
                 if (xhr.status >= 200 && xhr.status < 400) {
                     let response = xhr.responseText;
+
                     modal.classList.add('active');
 
                     modalWindow.innerHTML = el.innerHTML;
                     
-                    
-                    
                     const modalCounterDecrease = modalWindow.querySelector('.counter__decrease');
                     const modalCounterIncrease = modalWindow.querySelector('.counter__increase');
-                    console.log(modalCounterIncrease);
-                    console.log(modalCounterDecrease);
-
+                    const modalCounterInput = modalWindow.querySelector('.counter__input');
                     modalCounterDecrease.addEventListener('click', e => {
-                        const modalCounterInput = modalWindow.querySelector('.counter__input');
+                       
                         if (modalCounterInput.value > 1) {
                             modalCounterInput.value--;
                         }
@@ -53,17 +51,27 @@ productCards.forEach(el => {
                     });
                     
                     modalCounterIncrease.addEventListener('click', e => {
-                        const modalCounterInput = modalWindow.querySelector('.counter__input');
+                        
                         modalCounterInput.value++;
                         e.stopPropagation(); 
                     });
+
+                    const modalBtns = modalWindow.querySelectorAll('.product-card__add-to-cart');
+                    modalBtns.forEach(modalBtn => {
+                        modalBtn.innerHTML = 'Добавить в корзину'
+                        modalBtn.addEventListener('click', e => {
+                            modalCounterInput.value = 1
+                            alert('Товар добавлен в корзину')
+                        })
+                    })
+                    
                     
                 } else {
                     console.error('Ошибка: ' + xhr.status);
                 }
             };
 
-            xhr.onerror = function() {
+            xhr.onerror = () => {
                 console.error('Ошибка сети');
             };
 
@@ -85,6 +93,6 @@ modal.onclick = e => {
     e.stopPropagation();
 };
 
-modalCloser.onclick = e => {
+modalCloser.onclick = () => {
     modal.classList.remove('active');
 };
