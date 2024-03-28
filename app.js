@@ -1,54 +1,75 @@
-const productCards = document.querySelectorAll('.product-card')
-const modal = document.querySelector('.modal')
+const productCards = document.querySelectorAll('.product-card');
+const modalWindow = document.querySelector('.modal__window');
+const modal = document.querySelector('.modal');
+const modalCloser = document.querySelector('.modal__closer');
+
+
+function attachCounterHandlers() {
+    const modalCounterDecrease = modalWindow.querySelector('.counter__decrease');
+    const modalCounterIncrease = modalWindow.querySelector('.counter__increase');
+    const counterInput = modalWindow.querySelector('.counter__input');
+
+    modalCounterDecrease.addEventListener('click', e => {
+        if (counterInput.value > 1) {
+            counterInput.value--;
+        }
+        e.stopPropagation(); 
+    });
+
+    modalCounterIncrease.addEventListener('click', e => {
+        counterInput.value++;
+        e.stopPropagation(); 
+    });
+}
 
 productCards.forEach(el => {
-    const counterDecrease = el.querySelector('.counter__decrease')
-    const counterIncrease = el.querySelector('.counter__increase')
-    const counterInput = el.querySelector('.counter__input')  
+    const productCardBtns = el.querySelectorAll('.product-card__add-to-cart');
 
-    counterDecrease.addEventListener('click', e => {
-        if(counterInput.value > 1) {
-            counterInput.value--
-        }
-        
-    })
-    counterIncrease.addEventListener('click', e => {
-        counterInput.value++
-    })
-
-
-    const productCardBtns = el.querySelectorAll('.product-card__add-to-cart')
     productCardBtns.forEach(btn => {
         btn.addEventListener('click', () => {
 
-            let xhr = new XMLHttpRequest()
+            let xhr = new XMLHttpRequest();
             xhr.open('GET', window.location.href, true);
-            
-            xhr.onload = function() {
+
+            xhr.onload = () => {
                 if (xhr.status >= 200 && xhr.status < 400) {
                     let response = xhr.responseText;
-                    modal.classList.add('active')
+                    console.log('Ответ получен: ' + response);
+                    modal.classList.add('active');
 
-                    modal.innerHTML = el.innerHTML
+                    modalWindow.innerHTML = el.innerHTML;
                     console.log(el);
+
                     
+                    attachCounterHandlers();
+
                 } else {
                     console.error('Ошибка: ' + xhr.status);
                 }
             };
 
-            xhr.onerror = function() {
+            xhr.onerror = function () {
                 console.error('Ошибка сети');
             };
 
             xhr.send();
 
-        })
-    })
+        });
+    });
 
-})
+});
+
+window.addEventListener('click', e => {
+    if (e.target != modal) {
+        modal.classList.remove('active');
+    }
+});
 
 
+modal.onclick = e => {
+    e.stopPropagation();
+};
 
-
-
+modalCloser.onclick = e => {
+    modal.classList.remove('active');
+};
