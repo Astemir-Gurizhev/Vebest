@@ -4,23 +4,26 @@ const modal = document.querySelector('.modal');
 const modalCloser = document.querySelector('.modal__closer');
 
 
-function attachCounterHandlers() {
-    const modalCounterDecrease = modalWindow.querySelector('.counter__decrease');
-    const modalCounterIncrease = modalWindow.querySelector('.counter__increase');
-    const counterInput = modalWindow.querySelector('.counter__input');
+function attachCounterHandlers(parentElement) {
+    const counterDecrease = parentElement.querySelector('.counter__decrease');
+    const counterIncrease = parentElement.querySelector('.counter__increase');
+    const counterInput = parentElement.querySelector('.counter__input');
 
-    modalCounterDecrease.addEventListener('click', e => {
+    counterDecrease.addEventListener('click', e => {
         if (counterInput.value > 1) {
             counterInput.value--;
         }
-        e.stopPropagation(); 
+        e.stopPropagation();
     });
 
-    modalCounterIncrease.addEventListener('click', e => {
+    counterIncrease.addEventListener('click', e => {
         counterInput.value++;
-        e.stopPropagation(); 
+        e.stopPropagation();
     });
 }
+
+
+attachCounterHandlers(document);
 
 productCards.forEach(el => {
     const productCardBtns = el.querySelectorAll('.product-card__add-to-cart');
@@ -40,8 +43,8 @@ productCards.forEach(el => {
                     modalWindow.innerHTML = el.innerHTML;
                     console.log(el);
 
-                    
-                    attachCounterHandlers();
+                   
+                    attachCounterHandlers(modalWindow);
 
                 } else {
                     console.error('Ошибка: ' + xhr.status);
